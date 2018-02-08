@@ -10,6 +10,15 @@ import TwitterButton from './TwitterButton.jsx';
 const colors = [["#212121","#E57373"],["#880E4F","#F06292"],["#4A148C","#BA68C8"],["#1A237E","#5C6BC0"],["#006064","#42A5F5"],["#004D40","#039BE5"],["#827717","#43A047"],["#E65100","#43A047"],["#BF360C","#43A047"],["#263238","#43A047"]];
 console.log(colors.length)
 
+if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(function(position) {
+  console.log(position.coords.latitude, position.coords.longitude);
+  let apiUrl = 'api.openweathermap.org/data/2.5/weather&APPID=4b8d06411db9758c752cb3889b3a220e&lat=35&lon=139'
+});
+} else {
+  /* geolocation IS NOT available */
+}
+
 class QuoteButton extends React.Component {
   // This syntax ensures `this` is bound within handleClick.
   // Warning: this is *experimental* syntax.
@@ -39,7 +48,7 @@ function handleClick(e){
 		<QuoteButton backgroundColor={color}/>,
 		document.getElementById('button')
 	);
-	let apiUrl = 'https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1&_=' + rng;
+	let apiUrl = 'api.openweathermap.org/data/2.5/forecast?id=524901&APPID=4b8d06411db9758c752cb3889b3a220e' + rng;
 	axios.get(apiUrl)
 	.then(function (response) {
 		//alert("clicked");

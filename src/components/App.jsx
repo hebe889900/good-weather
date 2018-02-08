@@ -11,6 +11,13 @@ import axios from 'axios';
 import TwitterButton from './TwitterButton.jsx';
 
 
+  if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function(position) {
+  	console.log(position);
+    //$("#data").html("latitude: " + position.coords.latitude + "<br>longitude: " + position.coords.longitude);
+  });
+}
+
 const MyNavLinks = () => (
   <ToolbarGroup>
     <FlatButton label="Dashboard" labelStyle = {{color: "white"}}/>
