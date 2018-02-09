@@ -8,15 +8,8 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import axios from 'axios';
-import TwitterButton from './TwitterButton.jsx';
 
 
-  if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(function(position) {
-  	console.log(position);
-    //$("#data").html("latitude: " + position.coords.latitude + "<br>longitude: " + position.coords.longitude);
-  });
-}
 
 const MyNavLinks = () => (
   <ToolbarGroup>
@@ -52,29 +45,25 @@ class App extends React.Component {
 handleClick();
 
 function handleClick(e){
-	let rng = Math.floor(Math.random() * (10000000 - 1 + 1)) + 1;
-	let apiUrl = "https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1&_=" + rng;
-	axios.get(apiUrl)
-	.then(function (response) {
-		//alert("clicked");
-		//alert(response.data[0].content);
-		let content = he.decode(response.data[0].content).replace(/(<([^>]+)>)/ig,"");
-		let title = response.data[0].title;
-		let twitter_url = 'https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=' + '"' + content + '" ' + title;
-		let tumblr_url = 'https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=quotes,freecodecamp&caption=' + title + '&content=' + content + '&canonicalUrl=https://www.tumblr.com/buttons&shareSource=tumblr_share_button'
-		let urls = [encodeURI(twitter_url),encodeURI(tumblr_url)];
-		ReactDOM.render(
-		<TwitterButton urls = {urls} />,
-		document.getElementById('socialbutton')
-		);		
-		ReactDOM.render(
-		<App styles = {{fontFamily: "'Futura URW',sans-serif"}} title={response.data[0].title} content = {he.decode(response.data[0].content).replace(/(<([^>]+)>)/ig,"")}/>,
-		document.getElementById('app')
-		);
-	})
-	.catch(function (error) {
-		console.log(error);
+	if ("geolocation" in navigator) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+		console.log(position.coords.latitude, position.coords.longitude);
+		let apiUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude;
+		axios.get(apiUrl).then(function (response) {
+			//alert("clicked");
+			ReactDOM.render(
+			<App styles = {{fontFamily: "'Futura URW',sans-serif"}} title={response.data[0].title} content = {he.decode(response.data[0].content).replace(/(<([^>]+)>)/ig,"")}/>,
+			document.getElementById('app')
+			);		
+			console.log(response);		
+		})
+		.catch(function (error) {
+			console.log(error);
+		});  
 	});
+	} else {
+	  /* geolocation IS NOT available */
+	}	
 }
 
 export default App;
