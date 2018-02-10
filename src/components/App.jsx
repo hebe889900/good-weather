@@ -25,7 +25,7 @@ class App extends React.Component {
       	<MuiThemeProvider>
       		 <div style = {this.props.styles}>
 		         <div className="container">
-		         	<AppBar style = {this.props.appBarStyle} title="Quotes of the day" iconElementRight={<MyNavLinks />} />
+		         	<AppBar style = {this.props.appBarStyle} title="Forecast" iconElementRight={<MyNavLinks />} />
 			         	<Card>
 			         	<CardHeader titleStyle = {{fontSize: "2em",fontWeight: "bold"}} title= {this.props.title} titleColor = {this.props.titleColor} actAsExpander={true} showExpandableButton={true}/>	
 			         	<Divider />
@@ -51,11 +51,12 @@ function handleClick(e){
 		let apiUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude;
 		axios.get(apiUrl).then(function (response) {
 			//alert("clicked");
+			console.log(response);	
 			ReactDOM.render(
-			<App styles = {{fontFamily: "'Futura URW',sans-serif"}} title={response.data[0].title} content = {he.decode(response.data[0].content).replace(/(<([^>]+)>)/ig,"")}/>,
+			<App styles = {{fontFamily: "'Futura URW',sans-serif"}} title={response.data.main.temp} content = {response.data.weather[0].main}/>,
 			document.getElementById('app')
 			);		
-			console.log(response);		
+	
 		})
 		.catch(function (error) {
 			console.log(error);
