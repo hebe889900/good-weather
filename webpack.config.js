@@ -3,12 +3,14 @@
 // webpack.config.js
 const path = require('path'); // NOTE: We require path because we use it below
 const ManifestPlugin = require('webpack-manifest-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReactRootPlugin = require('html-webpack-react-root-plugin');
  
 
 module.exports = {
 
   entry: [
-    path.resolve(__dirname, 'src/main.js')
+    path.resolve(__dirname, 'src/main.jsx')
   ], // IMPORTANT: We changed the path to match our new index.js location
 
   output: {
@@ -37,7 +39,7 @@ module.exports = {
       ]
    },
   plugins: [
-    new ManifestPlugin()
+    new ManifestPlugin(),new HtmlWebpackPlugin(), new ReactRootPlugin()
   ]
 
 };
