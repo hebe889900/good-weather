@@ -7,6 +7,10 @@ import axios from 'axios';
 class App extends React.Component{
   constructor(){
     super();
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);    
+    this.convertToCelsius = this.convertToCelsius.bind(this);
+    this.convertToFahrenheit = this.convertToFahrenheit.bind(this);    
     this.state = {
       loading: true,
       zipcode: 10003,
@@ -14,22 +18,21 @@ class App extends React.Component{
       name: 'New York',
       humidity: 50,
       sunrise: 7,
-      value: ''
+      value: '',
+      tempUnit: 'F'
     }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
   	let th = this;
 	if ("geolocation" in navigator) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 		console.log(position.coords.latitude, position.coords.longitude);
-		let apiUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude;
+		let apiUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude + '&units=imperial';
 		axios.get(apiUrl).then(function (response) {
 			//alert("clicked");
 			console.log(th);
 			console.log(response);		
-			th.setState({loading: false, name: response.data.name, temp: Math.round(parseInt((response.data.main.temp)- 273)*9/5 +32), humidity: response.data.main.humidity})
+			th.setState({loading: false, name: response.data.name, temp: response.data.main.temp, humidity: response.data.main.humidity})
 			
 		})
 		.catch(function (error) {
@@ -41,18 +44,35 @@ class App extends React.Component{
 	}
 
   }
+
+  convertToFahrenheit() {
+  	console.log("Is C")
+    this.setState((prevState) => {
+    // Important: read `prevState` instead of `this.state` when updating.
+	    return {temp:  9/5*prevState.temp + 32, tempUnit: "F"}
+	});
+  }
+
+  convertToCelsius() {
+  	console.log("Is F")
+    this.setState((prevState) => {
+    // Important: read `prevState` instead of `this.state` when updating.
+	    return {temp:  5/9*(prevState.temp-32), tempUnit: "C"}
+	});    
+  }
+
   handleChange(event) {
     this.setState({value: event.target.value});
   }
   handleSubmit(event) {
     event.preventDefault();
     this.setState({zipcode: this.state.value});
-    fetch(`https://api.openweathermap.org/data/2.5/weather?zip=${this.state.zipcode}&appid=4398ca985b90b09bb540560e9dd6b60e`)
+    fetch(`https://api.openweathermap.org/data/2.5/weather?zip=${this.state.zipcode}&appid=4398ca985b90b09bb540560e9dd6b60e&units=imperial`)
     .then(res => res.json())
     .then(res =>   
     this.setState({
       name: res.name,
-      temp: Math.round(parseInt((res.main.temp)- 273)*9/5 +32),
+      temp: res.main.temp,
       humidity: res.main.humidity
     })
     )
@@ -64,6 +84,15 @@ class App extends React.Component{
     }
   }
   render(){
+    const isCelsius = this.state.tempUnit;
+    console.log(this.state.tempUnit)
+    let button = null;
+    if (isCelsius === "C") {
+      button = <LogoutButton onClick={this.convertToFahrenheit} />;
+    } else {
+      button = <LoginButton onClick={this.convertToCelsius} />;
+    }
+
     if (this.state.loading) {
       return(<div>Loading...</div>);
     } else {
@@ -76,15 +105,30 @@ class App extends React.Component{
         </label>
       </form>
         <h1>City: {this.state.name}</h1>
-        <h2 id= 'temp'>Temp: {this.state.temp} &#x2109;</h2>
+        <h2 id= 'temp'>Temp: {this.state.temp} {this.state.tempUnit};</h2>
         <h2>Humidity: {this.state.humidity}%</h2>
+        {button}
      </div>
     )
     }
   }
 }
 
+function LoginButton(props) {
+  return (
+    <button onClick={props.onClick}>
+      Convert To Celsius
+    </button>
+  );
+}
 
+function LogoutButton(props) {
+  return (
+    <button onClick={props.onClick}>
+      Convert To Fahrenheit
+    </button>
+  );
+}
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
@@ -92,7 +136,7 @@ function initialize(){
 	if ("geolocation" in navigator) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 		console.log(position.coords.latitude, position.coords.longitude);
-		let apiUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude;
+		let apiUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude + '&units=imperial';
 		axios.get(apiUrl).then(function (response) {
 			//alert("clicked");
 			console.log(response);					
