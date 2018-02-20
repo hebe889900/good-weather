@@ -27,7 +27,7 @@ class App extends React.Component{
 	if ("geolocation" in navigator) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 		console.log(position.coords.latitude, position.coords.longitude);
-		let apiUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude + '&units=imperial';
+		let apiUrl = '//api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude + '&units=imperial';
 		axios.get(apiUrl).then(function (response) {
 			//alert("clicked");
 			console.log(th);
@@ -67,7 +67,7 @@ class App extends React.Component{
   handleSubmit(event) {
     event.preventDefault();
     this.setState({zipcode: this.state.value});
-    fetch(`https://api.openweathermap.org/data/2.5/weather?zip=${this.state.zipcode}&appid=4398ca985b90b09bb540560e9dd6b60e&units=imperial`)
+    fetch(`//api.openweathermap.org/data/2.5/weather?zip=${this.state.zipcode}&APPID=4b8d06411db9758c752cb3889b3a220e&units=imperial`)
     .then(res => res.json())
     .then(res =>   
     this.setState({
@@ -136,7 +136,7 @@ function initialize(){
 	if ("geolocation" in navigator) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 		console.log(position.coords.latitude, position.coords.longitude);
-		let apiUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude + '&units=imperial';
+		let apiUrl = '//api.openweathermap.org/data/2.5/weather?APPID=4b8d06411db9758c752cb3889b3a220e&lat=' + position.coords.latitude + '&lon=' + position.coords.longitude + '&units=imperial';
 		axios.get(apiUrl).then(function (response) {
 			//alert("clicked");
 			console.log(response);					
